@@ -1,7 +1,6 @@
 
 
 class Car {
-
     constructor(mark, model, year, id = document.querySelector('#car-list').childElementCount + 1) {
         //this.id = document.querySelector('#car-list').childElementCount + 1;
         this.id = id;
@@ -10,15 +9,15 @@ class Car {
         this.year = year
     }
 }
-
 class UI {
     static findCarToEdit(cardata = null, button) {
         if (button == "edit") {
             let arr = JSON.parse(localStorage.cars)
-            console.log(cardata.children[1].textContent)
-            console.log(arr)
-            let filteredArr = arr.filter((el) => el.mark === cardata.children[1].textContent && el.model === cardata.children[2].textContent && el.year == cardata.children[3].textContent)
-            console.log(filteredArr)
+
+            let filteredArr = arr.filter((el) =>
+                el.mark === cardata.children[1].textContent
+                && el.model === cardata.children[2].textContent
+                && el.year == cardata.children[3].textContent)
             localStorage.setItem('carToEdit', JSON.stringify([]))
             localStorage.setItem('carToEdit', JSON.stringify(filteredArr))
         }
@@ -28,14 +27,10 @@ class UI {
             let yearValue = document.querySelector('#YEAR').value
             let arr = JSON.parse(localStorage.carToEdit)
             let arr2 = JSON.parse(localStorage.cars)
-
-
             arr[0].mark = markValue
             arr[0].model = modeValue
             arr[0].year = yearValue
             arr2 = arr2.map(car => car.id !== arr[0].id ? car : arr[0])
-
-            console.log(arr2)
             localStorage.setItem('cars', JSON.stringify(arr2))
             localStorage.setItem('carToEdit', JSON.stringify([]))
             localStorage.setItem('carToEdit', JSON.stringify(arr))
@@ -45,13 +40,8 @@ class UI {
         }
 
     }
-    static editCar() {
-        UI.findCarToEdit()
-    }
-
     static filter(value) {
         if (value !== '') {
-            console.log(value)
             let arr = JSON.parse(localStorage.cars)
             let filteredArr = arr.filter((el) => el.mark === value)
             localStorage.setItem('cars', JSON.stringify(filteredArr))
@@ -60,26 +50,17 @@ class UI {
         }
         else if (localStorage.length === 0 || 1) {
             localStorage.setItem('cars', JSON.stringify([]))
-            console.log(value)
             UI.clearUI();
             Storage.addSomeCar();
             UI.displayCars();
         }
         else {
-
         }
-
     }
-
     static sort(target) {
-
         let button = document.querySelector(`#${target.id}`);
-
         let option = target.id;
-
         if (button.firstElementChild.classList.contains('fa-caret-down')) {
-
-
 
             let arr = JSON.parse(localStorage.cars)
 
@@ -92,11 +73,9 @@ class UI {
                 }
                 return 0;
             })
-
             localStorage.setItem('cars', JSON.stringify(arr))
             button.firstElementChild.classList.remove('fa-caret-down')
             button.firstElementChild.classList.add('fa-caret-up')
-
             UI.clearUI();
             UI.displayCars()
         }
@@ -120,8 +99,6 @@ class UI {
 
             button.firstElementChild.classList.remove('fa-caret-up')
             button.firstElementChild.classList.add('fa-caret-down')
-
-
         }
     }
     static clearUI() {
@@ -136,8 +113,6 @@ class UI {
     static addCarToList(car) {
         const list = document.querySelector('#car-list')
         const row = document.createElement('tr')
-
-
         row.innerHTML = `
         <td>${car.id}</td>
         <td>${car.mark}</td>
@@ -145,7 +120,6 @@ class UI {
         <td>${car.year}</td>
         <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Edit</button></td>
         <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
-      
         `
         list.appendChild(row)
     }
@@ -169,9 +143,7 @@ class UI {
             el.parentElement.parentElement.remove()
         }
     }
-
 }
-
 class Storage {
     static addSomeCar() {
 
@@ -187,8 +159,6 @@ class Storage {
         let Mercedes2 = new Car("Mercedes", "Vito", 2005, 10)
         const cars = [Mercedes, Mazda, Hyundai, Lexus, Porshe, Fiat, Fiat2, Bmw, Audi, Mercedes2]
         cars.forEach(car => Storage.addCar(car))
-
-
     }
 
     static getCars() {
@@ -197,8 +167,6 @@ class Storage {
             cars = []
         }
         else {
-
-
             cars = JSON.parse(localStorage.getItem('cars'))
         }
         return cars
@@ -227,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 })
-
 document.addEventListener('DOMContentLoaded', UI.displayCars)
 
 document.querySelector('.car-form').addEventListener('submit', (e) => {
@@ -245,7 +212,6 @@ document.querySelector('.car-form').addEventListener('submit', (e) => {
         Storage.addCar(car)
         UI.showAllert('Car Added', 'success')
     }
-
 })
 
 document.querySelector('#car-list').addEventListener('click', (e) => {
@@ -260,11 +226,9 @@ document.querySelector('#car-list').addEventListener('click', (e) => {
 })
 document.querySelector('#model').addEventListener('click', (e) => {
     UI.sort(e.target)
-
 })
 document.querySelector('#year').addEventListener('click', (e) => {
     UI.sort(e.target)
-
 })
 document.querySelector("#search").addEventListener('click', () => {
     UI.filter(document.getElementById("mark").value);
