@@ -12,12 +12,38 @@ class Car {
 }
 
 class UI {
-    static findCarToEdit(cardata) {
-        console.log(cardata.children[3].textContent)
-        let arr = JSON.parse(localStorage.cars)
-        let filteredArr = arr.filter((el) => el.mark === cardata.children[1].textContent && el.model === cardata.children[2].textContent && el.year == cardata.children[3].textContent)
-        console.log(filteredArr)
-        return filteredArr
+    static findCarToEdit(cardata = null, button) {
+        if (button == "edit") {
+            let arr = JSON.parse(localStorage.cars)
+            console.log(cardata.children[1].textContent)
+            console.log(arr)
+            let filteredArr = arr.filter((el) => el.mark === cardata.children[1].textContent && el.model === cardata.children[2].textContent && el.year == cardata.children[3].textContent)
+            console.log(filteredArr)
+            localStorage.setItem('carToEdit', JSON.stringify([]))
+            localStorage.setItem('carToEdit', JSON.stringify(filteredArr))
+        }
+        else {
+            let markValue = document.querySelector('#MARK').value
+            let modeValue = document.querySelector('#MODEL').value
+            let yearValue = document.querySelector('#YEAR').value
+            let arr = JSON.parse(localStorage.carToEdit)
+            let arr2 = JSON.parse(localStorage.cars)
+
+
+            arr[0].mark = markValue
+            arr[0].model = modeValue
+            arr[0].year = yearValue
+            arr2 = arr2.map(car => car.id !== arr[0].id ? car : arr[0])
+
+            console.log(arr2)
+            localStorage.setItem('cars', JSON.stringify(arr2))
+            localStorage.setItem('carToEdit', JSON.stringify([]))
+            localStorage.setItem('carToEdit', JSON.stringify(arr))
+            UI.clearUI()
+            UI.displayCars();
+
+        }
+
     }
     static editCar() {
         UI.findCarToEdit()
@@ -229,7 +255,7 @@ document.querySelector('#car-list').addEventListener('click', (e) => {
             e.target.parentElement.parentElement.children[0].textContent)
     }
     else {
-        UI.findCarToEdit(undefined, undefined, undefined, e.target.parentElement.parentElement)
+        UI.findCarToEdit(e.target.parentElement.parentElement, "edit")
     }
 })
 document.querySelector('#model').addEventListener('click', (e) => {
@@ -244,7 +270,5 @@ document.querySelector("#search").addEventListener('click', () => {
     UI.filter(document.getElementById("mark").value);
 })
 document.querySelector("#edit").addEventListener('click', (e) => {
-    console.log(e.target.parentElement.parentElement.children[1].children[0].children[0].children[1].value)
-    console.log(e.target.parentElement.parentElement.children[1].children[0].children[1].children[1].value)
-    console.log(e.target.parentElement.parentElement.children[1].children[0].children[2].children[1].value)
+    UI.findCarToEdit(null, "update")
 })
